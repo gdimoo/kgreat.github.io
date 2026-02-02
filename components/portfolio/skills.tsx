@@ -32,6 +32,7 @@ const skillCategories: SkillCategory[] = [
     icon: Wrench,
     skills: [
       { name: "Git", level: 95 },
+      { name: "Airflow", level: 0},
       { name: "GitHub", level: 90 },
       { name: "VS Code", level: 95 },
       { name: "Docker", level: 80 },
