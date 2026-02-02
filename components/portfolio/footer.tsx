@@ -12,11 +12,11 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-foreground">Contact</h3>
             <div className="space-y-3">
               <Link
-                href="mailto:contact@example.com"
+                href="mailto:siripra.k@ubu.ac.th"
                 className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors text-sm"
               >
                 <Mail className="h-4 w-4" />
-                contact@example.com
+                siripra.k@ubu.ac.th
               </Link>
               <div className="flex items-center gap-3 text-muted-foreground text-sm">
                 <MapPin className="h-4 w-4" />
@@ -53,7 +53,7 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-foreground">Social</h3>
             <div className="flex items-center gap-4">
               <Link
-                href="https://github.com"
+                href="https://github.com/gdimoo"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
@@ -62,7 +62,7 @@ export function Footer() {
                 <Github className="h-5 w-5" />
               </Link>
               <Link
-                href="https://linkedin.com"
+                href="https://linkedin.com/in/siripra-kingchan-973387211"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
@@ -71,7 +71,7 @@ export function Footer() {
                 <Linkedin className="h-5 w-5" />
               </Link>
               <Link
-                href="mailto:contact@example.com"
+                href="mailto:siripra.k@ubu.ac.th"
                 className="p-2 rounded-lg bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
                 aria-label="Email"
               >
