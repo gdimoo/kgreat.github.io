@@ -15,26 +15,26 @@ const educations: Education[] = [
     degree: "Master of Science",
     field: "Computer Science",
     institution: "Mahidol University",
-    location: "Bangkok, Thailand",
-    period: "2015 — 2017",
+    location: "Nakhon Pathom, Thailand",
+    period: "Aug 2021 — Aug 2025",
     thesis:
-      "Deep Learning Approaches for Thai Natural Language Understanding",
+      "Weakly-Supervised Local Feature Extraction for Normal Pressure Hydrocephalus Classification", // อ้างอิงจากงานวิจัยที่ตีพิมพ์
     achievements: [
-      "Graduated with First Class Honors",
-      "Best Thesis Award in Computer Science",
-      "Published research in IEEE Conference",
+      "GPA: 3.79 (International Program)",
+      "Published research in Computers in Biology and Medicine (Q1 Journal)",
+      "Co-authored blockchain research published in IEEE Access",
     ],
   },
   {
     degree: "Bachelor of Science",
     field: "Computer Science",
-    institution: "Khon Kaen University",
-    location: "Khon Kaen, Thailand",
-    period: "2011 — 2015",
+    institution: "Ubon Ratchathani University",
+    location: "Ubon Ratchathani, Thailand",
+    period: "May 2017 — May 2021",
     achievements: [
-      "Graduated with Honors (GPA: 3.85)",
-      "Dean's List for 6 consecutive semesters",
-      "Won National Programming Competition",
+      "Graduated with 1st Class Honors",
+      "GPA: 3.89",
+      "Specialized in programming fundamentals and data structures",
     ],
   },
 ]

@@ -83,7 +83,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-border">
           <p className="text-center text-muted-foreground text-sm">
-            {currentYear} Dr. Somchai Prasert. Built with Next.js and Tailwind CSS.
+            {currentYear} Siripra Kingchan. Built with Next.js and Tailwind CSS.
           </p>
         </div>
       </div>

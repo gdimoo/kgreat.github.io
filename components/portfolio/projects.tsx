@@ -1,5 +1,5 @@
 import React from "react"
-import { ExternalLink, Github, Bot, Activity, BookOpen, BarChart3 } from "lucide-react"
+import { ExternalLink, Github, Bot, Activity, BookOpen, BarChart3, Landmark, Zap, Brain, Link as LinkIcon } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
@@ -15,39 +15,44 @@ interface Project {
 
 const projects: Project[] = [
   {
-    title: "RAG Chat Assistant",
+    title: "APM Platform (Predictive Maintenance)",
     description:
-      "An intelligent conversational AI system using Retrieval-Augmented Generation (RAG) to provide accurate, context-aware responses based on custom knowledge bases. Built with LangChain, OpenAI, and Pinecone.",
-    icon: Bot,
-    tags: ["Python", "LangChain", "OpenAI", "Pinecone", "FastAPI"],
-    link: "https://example.com",
-    github: "https://github.com",
+      "A data-driven model for predictive maintenance in manufacturing. Developed early issue detection systems for sensor anomalies using Python and engineering datasets to improve operational efficiency.",
+    icon: Activity, // หรือใช้ Gauge
+    tags: ["Python", "Django", "Airflow", "GCP", "Predictive Analytics"],
+    featured: true, // ตัวนี้ควรโชว์ เพราะแสดงความเป็น Lead
+  },
+  {
+    title: "NPH Classification via Weakly-Supervised Learning",
+    description:
+      "A medical AI research project for Normal Pressure Hydrocephalus classification using weakly-supervised local feature extraction on non-contrast CT brain scans. Published in Q1 Journal.",
+    icon: Brain,
+    tags: ["Python", "TensorFlow", "Medical AI", "Image Processing"],
+    link: "https://doi.org/10.1016/j.compbiomed.2025.110751", // ใส่ลิงก์เปเปอร์จริง
     featured: true,
   },
   {
-    title: "Medical Error Analysis (NPH)",
+    title: "Volta Fleet & EA-Service System",
     description:
-      "A collaborative research project with Nakhon Phanom Hospital analyzing medical error patterns using NLP and machine learning to improve patient safety and healthcare quality.",
-    icon: Activity,
-    tags: ["Python", "NLP", "Healthcare", "Data Analysis", "Research"],
+      "Developed the frontend for the Volta Fleet platform and EA-Service system at PEA, focusing on responsive design, usability, and secure data integration.",
+    icon: Zap, // สื่อถึงไฟฟ้า
+    tags: ["Next.js", "Nest.js", "SQL Server", "DevSecOps"],
     featured: true,
   },
   {
-    title: "E-Learning Platform",
+    title: "Blockchain Coffee Bean Traceability",
     description:
-      "A comprehensive online learning management system designed for Thai universities, featuring video streaming, quizzes, and AI-powered personalized recommendations.",
-    icon: BookOpen,
-    tags: ["Next.js", "PostgreSQL", "AWS", "TypeScript"],
-    link: "https://example.com",
-    github: "https://github.com",
+      "A smart contract-based traceability application for the Thai coffee supply chain, developed for NECTEC to enhance transparency from users' perspective.",
+    icon: LinkIcon, // สื่อถึง Blockchain
+    tags: ["Hyperledger Fabric", "Vue.js", "Blockchain", "Smart Contracts"],
+    // github: "https://github.com/gdimoo",
   },
   {
-    title: "Thai NLP Toolkit",
+    title: "Public Works Web Infrastructure",
     description:
-      "Open-source library for Thai natural language processing including tokenization, named entity recognition, and sentiment analysis optimized for academic research.",
-    icon: BarChart3,
-    tags: ["Python", "PyTorch", "NLP", "Open Source"],
-    github: "https://github.com",
+      "Redesigned and modernized a comprehensive web system for the Department of Public Works to replace outdated infrastructure using modern tech stacks.",
+    icon: Landmark,
+    tags: ["Angular", "NestJS", "CockroachDB", "Keycloak"],
   },
 ]
 
@@ -71,9 +76,8 @@ export function Projects() {
             return (
               <article
                 key={index}
-                className={`group relative bg-card border border-border rounded-lg p-6 hover:border-primary/50 transition-all duration-300 ${
-                  project.featured ? "md:col-span-2" : ""
-                }`}
+                className={`group relative bg-card border border-border rounded-lg p-6 hover:border-primary/50 transition-all duration-300 ${project.featured ? "md:col-span-2" : ""
+                  }`}
               >
                 {project.featured && (
                   <span className="absolute top-4 right-4 px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded">

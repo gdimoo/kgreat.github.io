@@ -15,7 +15,7 @@ export function Hero() {
               Hello, I am
             </p>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground text-balance">
-              Dr. Somchai Prasert
+              Siripra Kingchan
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground font-medium">
               DSSI Lecturer at Ubon Ratchathani University
@@ -23,12 +23,14 @@ export function Hero() {
           </div>
 
           <p className="text-muted-foreground leading-relaxed max-w-2xl text-pretty">
-            I am a passionate educator and software developer specializing in{" "}
-            <span className="text-foreground font-medium">Computer Science</span> and{" "}
-            <span className="text-foreground font-medium">Artificial Intelligence</span>. 
-            My research focuses on leveraging AI to solve real-world problems, 
-            particularly in healthcare and education technology. I believe in 
-            bridging the gap between academic research and practical applications.
+            I am a <span className="text-foreground font-medium">Digital Innovation Lead</span> and
+            <span className="text-foreground font-medium">Computer Science Educator</span> at Ubon Ratchathani University,
+            specializing in <span className="text-foreground font-medium">Artificial Intelligence</span> and
+            <span className="text-foreground font-medium">Full Stack Development</span>.
+            With a background as a <span className="text-foreground font-medium">Team Lead</span> in enterprise-level manufacturing,
+            my mission is to bridge the gap between academic research and industrial applications.
+            I leverage AI and <span className="text-foreground font-medium">Data Pipelines</span> to drive digital transformation,
+            particularly in healthcare and smart logistics, to foster sustainable economic growth in my home province.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-4">

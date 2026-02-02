@@ -141,35 +141,32 @@ export function Skills() {
         </div>
 
         {/* Skills Display */}
+        {/* Skills Display - ปรับใหม่ให้ไม่มีแถบ % */}
         {currentCategory && (
-          <div className="bg-card border border-border rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <currentCategory.icon className="h-6 w-6 text-primary" />
-              <h3 className="text-xl font-semibold text-foreground">
+          <div className="bg-card border border-border rounded-lg p-8">
+            <div className="flex items-center gap-3 mb-8">
+              <currentCategory.icon className="h-7 w-7 text-primary" />
+              <h3 className="text-2xl font-semibold text-foreground">
                 {currentCategory.title}
               </h3>
             </div>
 
-            <div className="space-y-4">
+            {/* แสดงเป็น Flex Wrap สำหรับ Badge */}
+            <div className="flex flex-wrap gap-3">
               {currentCategory.skills.map((skill) => (
-                <div key={skill.name} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-foreground">
-                      {skill.name}
-                    </span>
-                    <span className="text-xs text-muted-foreground font-mono">
-                      {skill.level}%
-                    </span>
-                  </div>
-                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
-                      style={{ width: `${skill.level}%` }}
-                    />
-                  </div>
+                <div
+                  key={skill.name}
+                  className="px-5 py-2.5 bg-secondary/50 border border-border rounded-full text-sm font-medium text-foreground hover:border-primary/50 hover:bg-secondary transition-colors"
+                >
+                  {skill.name}
                 </div>
               ))}
             </div>
+
+            {/* เพิ่มส่วนบรรยายสั้นๆ เพื่อความโปร (Optional)
+            <p className="mt-8 text-sm text-muted-foreground italic">
+              * ประสบการณ์การใช้งานจริงในโครงการระดับอุตสาหกรรมและงานวิจัยตีพิมพ์ระดับนานาชาติ
+            </p> */}
           </div>
         )}
       </div>
