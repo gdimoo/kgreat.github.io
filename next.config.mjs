@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  basePath: '/kgreat.github.io',
+  basePath: '/portfolio',
   typescript: {
     ignoreBuildErrors: true,
   },
