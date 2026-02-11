@@ -27,3 +27,4 @@ yarn-error.log*
 next-env.d.ts
 gh-pages
 gh-pages.pub
+.DS_Store
