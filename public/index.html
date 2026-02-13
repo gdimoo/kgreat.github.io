@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Code to Campus - Interactive Slides</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* 1. RESET & BASIC SETUP */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: 'Kanit', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 2. SLIDE ARCHITECTURE */
+        .slide-deck {
+            position: relative;
+            width: 1280px;
+            height: 720px;
+            z-index: 1;
+        }
+
+        .slide-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.98);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide-container.active {
+            display: flex;
+            opacity: 1;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        /* Background Decor */
+        .slide-container::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(242, 101, 34, 0.15), transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        .slide-container::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15), transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        .slide-container>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 3. TYPOGRAPHY & COMMON ELEMENTS */
+        h1,
+        h2,
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        h1 {
+            font-size: 80px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #F26522, #db2777, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .slide-title {
+            font-size: 48px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 30px;
+            width: 100%;
+            text-align: left;
+            padding-left: 20px;
+            border-left: 6px solid #F26522;
+        }
+
+        h3 {
+            font-size: 26px;
+            color: #0f172a;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        p,
+        li {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #475569;
+            font-weight: 300;
+        }
+
+        strong {
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        /* 4. LAYOUT UTILITIES */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .image-wrapper {
+            border-radius: 24px;
+            overflow: hidden;
+            height: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: #fff;
+            padding: 10px;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 18px;
+        }
+
+        .rounded-image-layout .image-wrapper {
+            border-radius: 50%;
+            width: 380px;
+            height: 380px;
+            margin: 0 auto;
+        }
+
+        .tiled-content {
+            display: flex;
+            gap: 25px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .tile {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 30px;
+            flex: 1;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .tile .icon {
+            font-size: 42px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #F26522, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bullet-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .bullet-list li {
+            margin-bottom: 15px;
+            padding-left: 35px;
+            position: relative;
+        }
+
+        .bullet-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 4px;
+            color: #3b82f6;
+            font-size: 18px;
+        }
+
+        .section-title-layout {
+            text-align: center;
+        }
+
+        .section-title-layout h2 {
+            font-size: 64px;
+            color: #0f172a;
+        }
+
+        .section-title-layout hr {
+            width: 100px;
+            height: 6px;
+            background: #F26522;
+            border: none;
+            border-radius: 3px;
+            margin: 30px auto;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-orange {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+        .badge-purple {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        /* Timeline Specifics */
+        .timeline-layout {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            padding: 40px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            width: 90%;
+            height: 8px;
+            background: linear-gradient(90deg, #e2e8f0 0%, #F26522 50%, #3b82f6 100%);
+            z-index: 0;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        CSS
+        /* Modal Styles */
+        CSS
+
+        /* ปรับให้ Modal อยู่ชั้นบนสุดของทุกอย่าง */
+        /* Modal Overlay - แยกออกมาเป็น Layer บนสุดของทั้งไฟล์ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            /* ใช้ JavaScript สั่งให้เป็น flex */
+            justify-content: center;
+            align-items: center;
+            z-index: 99999 !important;
+            /* บังคับให้อยู่บนสุดเหนือทุกอย่าง */
+            cursor: zoom-out;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-img {
+            max-width: 90%;
+            max-height: 85%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-img {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* ปรับ Nav และ Progress ให้อยู่ระหว่าง Slide กับ Modal */
+        .nav-button,
+        .slide-counter,
+        .progress-bar {
+            z-index: 1000;
+        }
+
+        /* Slide ที่แสดงผลอยู่ให้มี z-index พื้นฐาน */
+        .slide-container.active {
+            display: flex;
+            opacity: 1;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        .nav-button,
+        .slide-counter,
+        .progress-bar {
+            z-index: 100;
+            /* ให้ปุ่มนำทางอยู่ต่ำกว่า Modal (9999) */
+        }
+
+        /* 3. SIDEBAR & MODAL SYSTEM */
+        .sidebar-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            z-index: 9998;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            right: -500px;
+            width: 450px;
+            height: 100vh;
+            background: white;
+            z-index: 9999;
+            padding: 40px;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+            transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-overlay.active {
+            right: 0;
+        }
+
+        .sidebar-img-box {
+            width: 100%;
+            height: 280px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 4. GALLERY & TIMELINE */
+        .memory-gallery {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .memory-item {
+            border-radius: 16px;
+            overflow: hidden;
+            height: 180px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .memory-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 25px rgba(242, 101, 34, 0.2);
+        }
+
+        .memory-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-wide {
+            grid-column: span 2;
+        }
+
+        .timeline-layout {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            padding: 40px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            width: 90%;
+            height: 8px;
+            background: linear-gradient(90deg, #e2e8f0 0%, #F26522 50%, #3b82f6 100%);
+            z-index: 0;
+            border-radius: 10px;
+        }
+
+        .timeline-item {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            width: 18%;
+            background: #fff;
+            padding: 20px 10px;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .timeline-item:hover {
+            transform: translateY(-10px);
+            border: 2px solid #F26522;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline-item:hover {
+            transform: translateY(-10px) !important;
+            border-color: #F26522;
+            box-shadow: 0 20px 40px rgba(242, 101, 34, 0.15);
+            z-index: 10;
+        }
+
+        .timeline-item h3 {
+            font-size: 18px;
+            color: #334155;
+            margin-top: 25px;
+        }
+
+        .timeline-item p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        .timeline-marker {
+            width: 54px;
+            height: 54px;
+            background: #fff;
+            border: 4px solid #F26522;
+            border-radius: 50%;
+            position: absolute;
+            top: -55px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #F26522;
+            font-size: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .timeline-item:hover .timeline-marker {
+            background: #F26522;
+            color: #fff;
+            transform: translateX(-50%) scale(1.2);
+            box-shadow: 0 0 20px rgba(242, 101, 34, 0.4);
+        }
+
+        /* Bleed Image Layout Fix */
+        .slide-container.bleed-image-layout {
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0;
+            align-items: start;
+        }
+
+        .slide-container.bleed-image-layout .content-container {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .slide-container.bleed-image-layout img.bleed-image-side {
+            width: 100%;
+            height: 720px;
+            object-fit: cover;
+        }
+
+        /* 5. NAVIGATION CONTROLS */
+        .nav-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #334155;
+            font-size: 24px;
+            transition: all 0.2s;
+        }
+
+        .nav-button:hover {
+            background: #fff;
+            transform: translateY(-50%) scale(1.1);
+            color: #F26522;
+        }
+
+        .prev-btn {
+            left: 40px;
+        }
+
+        .next-btn {
+            right: 40px;
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: #F26522;
+            width: 0%;
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #64748b;
+            z-index: 100;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .behind-the-scenes-container {
+            animation: fadeIn 1s ease-in;
+            padding: 60px;
+            background: #fdfdfd;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        .reality-box {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .illustration-mockup {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        /* ตกแต่ง Bullet points ให้ดู modern */
+        .journey-list {
+            text-align: left;
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 30px;
+        }
+
+        .journey-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #334155;
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        .status-stamp {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+
+        .memory-gallery {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(2, 220px);
+            gap: 15px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .memory-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer;
+        }
+
+        .memory-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .memory-item:hover {
+            transform: scale(1.03);
+            z-index: 20;
+            box-shadow: 0 15px 30px rgba(242, 101, 34, 0.2);
+        }
+
+        .memory-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* จัดสัดส่วนให้ดูมีจังหวะ (Mosaic Effect) */
+        .item-wide {
+            grid-column: span 2;
+        }
+
+        .item-tall {
+            grid-row: span 2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <button class="nav-button prev-btn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="nav-button next-btn" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
+    <div class="slide-counter" id="slideCounter">1 / 15</div>
+
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+    <div class="sidebar-overlay" id="sidebar">
+        <div style="text-align: right; cursor: pointer; margin-bottom: 15px;" onclick="closeSidebar()"><i
+                class="fa-solid fa-xmark fa-2x"></i></div>
+        <div class="sidebar-img-box"><img id="sidebarImage" src=""></div>
+        <h3 id="sidebarTitle">Moment Title</h3>
+        <p id="sidebarDesc">รายละเอียดของเหตุการณ์สำคัญในเส้นทางนี้...</p>
+        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid #eee;">
+            <span class="badge badge-orange" id="sidebarTag">Experience</span>
+        </div>
+    </div>
+
+    <div class="slide-deck">
+
+        <!-- Slide 1: Cover Slide -->
+        <div class="slide-container active">
+            <div class="content-area" style="text-align: center; align-items: center;">
+                <div style="margin-bottom: 30px;">
+                    <i class="fa-solid fa-code" style="font-size: 60px; color: #F26522; margin-right: 20px;"></i>
+                    <i class="fa-solid fa-graduation-cap" style="font-size: 60px; color: #3b82f6;"></i>
+                </div>
+                <h1>The Road to Research and Innovation</h1>
+                <p style="font-size: 32px; color: #64748b; font-weight: 300;">เส้นทางสู่การเป็นนักวิจัย:
+                    จากรั้ว จภ.มุกดาหาร สู่โลก Al และนวัตกรรม</p>
+                <div
+                    style="margin-top: 40px; padding: 20px 40px; background: #fff; border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: inline-block;">
+                    <strong style="font-size: 24px; color: #1e293b;">อ.สิริภราด์ กิ่งจันทร์ (พี่เกรท)</strong><br>
+                    <span style="font-size: 18px; color: #F26522;">ศิษย์เก่า จภ.มุกดาหาร รุ่น 19</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Who is P'Great? -->
+        <div class="slide-container">
+            <h2 class="slide-title">Who is 'P'Great'?</h2>
+            <div class="content-area">
+                <div class="two-column rounded-image-layout">
+                    <div class="image-wrapper" style="padding: 0;">
+                        <!-- Using local placeholder as per context, assuming user provides the file -->
+                        <img src="./great_profile.JPG" alt="Ajarn Great Profile"
+                            onerror="this.src='http://googleusercontent.com/image_collection/image_retrieval/6064597368218731603'">
+                    </div>
+                    <div>
+                        <div class="bullet-list">
+                            <ul>
+                                <li><strong>High School:</strong> PCSHS Mukdahan (Gen 19) <span
+                                        class="badge badge-orange">POSN Camp 2</span></li>
+                                <li><strong>Undergrad:</strong> B.Sc. Com Sci, UBU <span class="badge badge-blue">1st
+                                        Class Honors</span></li>
+                                <li><strong>Master's:</strong> M.Sc. Com Sci, Mahidol (International) <span
+                                        class="badge badge-purple">GPA 3.79</span></li>
+                                <li><strong>Experience:</strong> SCGP (Team Lead), PEA (Programmer)</li>
+                                <li><strong>Current:</strong> Lecturer DSSI @ UBU</li>
+                                <li><strong>Focus:</strong> Medical AI, Blockchain, Software Innovation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW SLIDE 3: ความทรงจำที่ จภ.มุกดาหาร (Based on Image 1) -->
+        <div class="slide-container">
+            <h2 class="slide-title" style="margin-bottom: 20px;">ความทรงจำที่ จภ.มุกดาหาร (The Origin)</h2>
+            <div class="content-area" style="justify-content: space-between; padding-bottom: 0;">
+                <div class="list-layout"
+                    style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 30px;">
+                    <!-- Item 1 -->
+                    <div style="display: flex; align-items: flex-start; gap: 25px;">
+                        <div
+                            style="background: #fff7ed; padding: 15px; border-radius: 12px; min-width: 80px; text-align: center;">
+                            <i class="fa-solid fa-house" style="font-size: 36px; color: #F26522;"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin: 0 0 5px 0;">ชีวิตเด็กหอ</h3>
+                            <p style="margin: 0; font-size: 22px;">การใช้ชีวิตร่วมกันและการเรียนที่เข้มข้นของรุ่น 19
+                                ฝึกฝนความอดทนและระเบียบวินัย</p>
+                        </div>
+                    </div>
+                    <!-- Item 2 -->
+                    <div style="display: flex; align-items: flex-start; gap: 25px;">
+                        <div
+                            style="background: #fff7ed; padding: 15px; border-radius: 12px; min-width: 80px; text-align: center;">
+                            <i class="fa-solid fa-laptop-code" style="font-size: 36px; color: #F26522;"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin: 0 0 5px 0;">จุดเริ่มต้นความชอบ</h3>
+                            <p style="margin: 0; font-size: 22px;">
+                                วิชาคอมพิวเตอร์ที่กลายเป็นจุดประกายสำคัญในเส้นทางอาชีพในอนาคต
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Item 3 -->
+                    <div style="display: flex; align-items: flex-start; gap: 25px;">
+                        <div
+                            style="background: #fff7ed; padding: 15px; border-radius: 12px; min-width: 80px; text-align: center;">
+                            <i class="fa-solid fa-user-group" style="font-size: 36px; color: #F26522;"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin: 0 0 5px 0;">มิตรภาพที่ยั่งยืน</h3>
+                            <p style="margin: 0; font-size: 22px;">
+                                สายสัมพันธ์จากเพื่อนร่วมรุ่นที่ยังคงส่งผลและเป็นกำลังใจสำคัญจนถึงปัจจุบัน</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer Quote -->
+                <div
+                    style="background: #dd8541; margin: 30px -50px -50px -50px; padding: 30px; text-align: center; color: white; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;">
+                    <p style="margin: 0; font-size: 24px; font-weight: 500; color: white;">
+                        "ความอดทนและระเบียบวินัยที่นี่
+                        คือรากฐานที่สำคัญที่สุดเมื่อพี่ก้าวออกไปเจอโลกกว้าง"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW SLIDE 4: จุดประกายชาวโค้ด (Based on Image 2) -->
+        <div class="slide-container">
+            <h2 class="slide-title">จุดประกายชาวโค้ด: เส้นทางสู่ สอวน.</h2>
+            <div class="content-area">
+                <div class="two-column">
+                    <!-- Left Side -->
+                    <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                        <!-- Green Box -->
+                        <div
+                            style="background: #ecfdf5; border-left: 8px solid #10b981; padding: 30px; border-radius: 8px; margin-bottom: 40px;">
+                            <h3 style="color: #047857; display: flex; align-items: center; gap: 15px; font-size: 28px;">
+                                <i class="fa-solid fa-certificate"></i> ความสำเร็จในปี 2556 & 2557
+                            </h3>
+                            <p style="color: #065f46; margin: 10px 0 0 0; font-size: 22px;">
+                                ผู้แทนศูนย์ค่ายคอมพิวเตอร์โอลิมปิก (สอวน. ค่าย 2)</p>
+                        </div>
+
+                        <!-- Text Block -->
+                        <div>
+                            <h3 style="color: #F26522; display: flex; align-items: center; gap: 15px; font-size: 28px;">
+                                <i class="fa-solid fa-lightbulb"></i> มากกว่าแค่การเขียนโค้ด
+                            </h3>
+                            <p style="font-size: 22px; margin-top: 15px;">
+                                การเขียนโปรแกรมไม่ใช่แค่เรื่องของภาษาคอมพิวเตอร์
+                                แต่คือการฝึก <strong>"วิธีคิด"</strong> อย่างเป็นระบบ หรือ <strong>Algorithmic
+                                    Thinking</strong> ซึ่งเป็นรากฐานสำคัญของนักพัฒนา</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Side (Graphic) -->
+                    <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                        <div
+                            style="background: white; padding: 40px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); text-align: center; border: 1px solid #f1f5f9; width: 100%; aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
+                                <span
+                                    style="background: #e2e8f0; padding: 10px 25px; border-radius: 12px; font-size: 24px; font-weight: 600; color: #334155;">Logic</span>
+                                <i class="fa-solid fa-chevron-right" style="color: #94a3b8; font-size: 20px;"></i>
+                                <span style="font-size: 24px; color: #64748b;">Syntax</span>
+                            </div>
+
+                            <p style="color: #10b981; font-weight: 600; font-size: 20px; margin-bottom: 30px;">Thinking
+                                Process is Key</p>
+
+                            <!-- Simple Diagram Graphic -->
+                            <div style="position: relative; width: 150px; height: 150px;">
+                                <i class="fa-solid fa-diagram-project"
+                                    style="font-size: 100px; color: #cbd5e1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
+                                <i class="fa-solid fa-gear"
+                                    style="font-size: 40px; color: #F26522; position: absolute; top: 10px; right: 10px; animation: spin 4s linear infinite;"></i>
+                            </div>
+
+                            <style>
+                                @keyframes spin {
+                                    100% {
+                                        transform: rotate(360deg);
+                                    }
+                                }
+                            </style>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: University Life -->
+        <div class="slide-container">
+            <h2 class="slide-title">University: More than just classrooms</h2>
+            <div class="content-area">
+                <div class="tiled-content">
+                    <div class="tile">
+                        <div class="icon"><i class="fa-solid fa-award"></i></div>
+                        <h3>Academic Excellence</h3>
+                        <p>เกียรตินิยมอันดับ 1 (3.89)<br>รางวัลมูลนิธิ ศ.ดร.แถบ นีละนิธิ</p>
+                    </div>
+                    <div class="tile">
+                        <div class="icon"><i class="fa-solid fa-trophy"></i></div>
+                        <h3>Competitions</h3>
+                        <div
+                            style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 15px;">
+                            <span class="badge badge-purple" style="font-size: 14px;">Bronze Medal ICDL 2019</span>
+                            <span class="badge badge-orange" style="font-size: 14px;">R2M (Research to Market)</span>
+                            <span class="badge badge-blue" style="font-size: 14px;">NSC Finalist</span>
+                        </div>
+                    </div>
+                    <div class="tile">
+                        <div class="icon"><i class="fa-solid fa-rocket"></i></div>
+                        <h3>Freedom</h3>
+                        <p>อิสระที่มาพร้อมความรับผิดชอบ<br>เริ่มสนุกกับการสร้างซอฟต์แวร์จริง</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Timeline Journey (REORDERED) -->
+        <div class="slide-container">
+            <h2 class="slide-title">My Journey Timeline</h2>
+            <div class="content-area">
+                <div class="timeline-layout">
+                    <div class="timeline-line"></div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"><i class="fa-solid fa-school"></i></div>
+                        <h3>PCSHS</h3>
+                        <p>High School<br>Foundation</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <h3>UBU</h3>
+                        <p>Undergrad<br>Coding Skills</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"><i class="fa-solid fa-microscope"></i></div>
+                        <h3>Mahidol</h3>
+                        <p>Master's Degree<br><strong>Root Cause Analysis</strong></p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"><i class="fa-solid fa-briefcase"></i></div>
+                        <h3>Work</h3>
+                        <p>PEA & SCGP<br>Applied Research</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"><i class="fa-solid fa-chalkboard-user"></i></div>
+                        <h3>Lecturer</h3>
+                        <p>UBU Science<br>Sharing Knowledge</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Memory Journey Gallery -->
+
+        <div class="slide-container">
+            <h2 class="slide-title">My Journey Memories</h2>
+            <div class="memory-gallery">
+                <div class="memory-item item-wide"
+                    onclick="openSidebar('./memory/1.jpg', 'สอวน. คอมพิวเตอร์ ค่าย 2', 'จุดเริ่มต้นของการฝึกคิดแบบ Algorithmic Thinking และการแก้ปัญหาอย่างเป็นระบบ')">
+                    <img src="./memory/1.jpg">
+                </div>
+                <div class="memory-item item-wide"
+                    onclick="openSidebar('./memory/0.jpg', 'สอวน. คอมพิวเตอร์ ค่าย 3', 'ตัวแทนศูนย์ค่ายคอมพิวเตอร์โอลิมปิก สอวน. ค่าย 3 ที่ม.อุบลฯ')">
+                    <img src="./memory/0.jpg">
+                </div>
+                <div class="memory-item"
+                    onclick="openSidebar('./memory/2.jpg', 'สอวน. คอมพิวเตอร์ ค่าย 3', 'ตัวแทนศูนย์ค่ายคอมพิวเตอร์โอลิมปิก สอวน. ค่าย 3 ที่มอ.สงขลาฯ')">
+                    <img src="./memory/2.jpg">
+                </div>
+                <div class="memory-item"
+                    onclick="openSidebar('./memory/3.jpg', 'มิตรภาพที่ยั่งยืน', 'สายสัมพันธ์เพื่อนร่วมรุ่นที่ยังคงเป็นกำลังใจสำคัญจนถึงปัจจุบัน')">
+                    <img src="./memory/3.jpg">
+                </div>
+                <div class="memory-item item-wide"
+                    onclick="openSidebar('./memory/4.jpg', 'เริ่มต้นที่ ม.อุบลฯ', 'ติวสอบให้เพื่อนร่วมรุ่น')">
+                    <img src="./memory/4.jpg">
+                </div>
+                <div class="memory-item"
+                    onclick="openSidebar('./memory/5.jpg', 'ดูแลน้องค่ายโอลิมปิก', 'การถ่ายทอดความรู้และประสบการณ์ให้กับน้องๆ รุ่นต่อไป')">
+                    <img src="./memory/5.jpg">
+                </div>
+                <div class="memory-item item-wide"
+                    onclick="openSidebar('./memory/7.jpg', 'เข้าร่วมแข่งขันโครงการต่างๆ', 'การพัฒนาทักษะและประสบการณ์ผ่านการแข่งขันเชิงวิชาการ และแลกเปลี่ยนความรู้กับเพื่อนๆ')">
+                    <img src="./memory/7.jpg">
+                </div>
+                <div class="memory-item"
+                    onclick="openSidebar('./memory/8.jpg', 'ชีวิตรั้วมหาวิทยาลัย', 'อิสระที่มาพร้อมความรับผิดชอบและการค้นพบความชอบที่แท้จริง')">
+                    <img src="./memory/8.jpg">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Master's Degree (NEW SLIDE) -->
+        <div class="slide-container bleed-image-layout">
+            <div class="content-container">
+                <h2 class="slide-title">Master's Degree: The Mindset Shift</h2>
+                <div class="content-area">
+                    <h3>M.Sc. Computer Science (Inter), Mahidol</h3>
+                    <p style="margin-bottom: 20px;">ช่วงเวลาสำคัญที่เปลี่ยนวิธีคิดจาก "แค่ทำให้ใช้งานได้" เป็น
+                        <strong>"ทำไมถึงเป็นแบบนั้น?"</strong>
+                    </p>
+                    <div class="bullet-list">
+                        <ul>
+                            <li><strong>Root Cause Analysis:</strong> การวิเคราะห์หาสาเหตุที่แท้จริงของปัญหา
+                                ไม่ใช่แค่แก้ที่ปลายเหตุ</li>
+                            <li><strong>Systematic Thinking:</strong> การออกแบบระบบที่ซับซ้อนอย่างมีหลักการ</li>
+                            <li><strong>Research Methodology:</strong> การพิสูจน์ผลลัพธ์ด้วยข้อมูลและสถิติ</li>
+                        </ul>
+                    </div>
+                    <p style="margin-top: 20px; color: #F26522; font-weight: 500;">"ทักษะวิจัยเหล่านี้
+                        คือกุญแจสำคัญที่ทำให้พี่เติบโตเร็วในสายงานเอกชน"</p>
+                </div>
+            </div>
+            <div class="image-container">
+                <img class="bleed-image-side" src="./master_pic.jpg" alt="Research and Analysis">
+            </div>
+        </div>
+
+        <!-- Slide 8: Industry SCGP -->
+        <div class="slide-container bleed-image-layout">
+            <div class="content-container">
+                <h2 class="slide-title">Industry: SCGP (Smart Factory)</h2>
+                <div class="content-area">
+                    <h3>Project: APM Platform</h3>
+                    <p>ใช้ทักษะวิจัย (Data Analysis) มาวิเคราะห์ข้อมูล Sensor ในโรงงานเพื่อทำ Predictive Maintenance</p>
+                    <div style="margin-top: 20px;">
+                        <span class="badge badge-orange">Python</span>
+                        <span class="badge badge-orange">Django</span>
+                        <span class="badge badge-orange">Airflow</span>
+                    </div>
+                    <p style="margin-top: 20px; font-style: italic; color: #64748b;">"Coding for Business Impact:
+                        ลดต้นทุนหลักล้านด้วยการวิเคราะห์ที่แม่นยำ"</p>
+                </div>
+            </div>
+            <div class="image-container">
+                <img class="bleed-image-side" src="./SCGP-COVER.png" alt="Smart Factory Automation">
+            </div>
+            ref: https://smartindustry.scgpackaging.com/
+        </div>
+
+        <!-- Slide 9: Industry PEA -->
+        <div class="slide-container bleed-image-layout">
+            <div class="image-container">
+                <img class="bleed-image-side" src="./pea_volta.jpeg" alt="Electric Vehicle Charging Station">
+            </div>
+            <div class="content-container">
+                <h2 class="slide-title">Industry: PEA (Energy)</h2>
+                <div class="content-area">
+                    <h3>Project: Volta Fleet & EA-Service</h3>
+                    <p>นำทักษะการออกแบบระบบ (System Design) มาใช้กับระบบจัดการสถานีชาร์จ EV ระดับประเทศ</p>
+                    <div style="margin-top: 20px;">
+                        <span class="badge badge-blue">Next.js</span>
+                        <span class="badge badge-blue">DevSecOps</span>
+                        <span class="badge badge-blue">Scalability</span>
+                    </div>
+                    <p style="margin-top: 20px; font-style: italic; color: #64748b;">"เมื่อเราเข้าใจ Root Cause
+                        เราจะเขียนโค้ดที่ Bug น้อยลงและระบบเสถียรขึ้น"</p>
+                </div>
+            </div>
+            ref: https://www.pea.co.th/
+        </div>
+
+
+
+        <!-- Slide 10: The Pivot -->
+        <div class="slide-container">
+            <div class="section-title-layout">
+                <h2>From Developer to Researcher</h2>
+                <hr>
+                <p style="font-size: 24px;">"Developer สร้าง Product แก้ปัญหาธุรกิจ<br>Researcher สร้าง Knowledge
+                    แก้ปัญหาอนาคต"</p>
+                <p style="margin-top: 20px; font-size: 18px; color: #64748b;">(กลับมาเป็นอาจารย์ เพื่อส่งต่อ Mindset
+                    นี้ให้น้องๆ)</p>
+            </div>
+        </div>
+
+        <!-- Slide 11: Research Highlight (Blockchain) -->
+        <div class="slide-container">
+            <h2 class="slide-title">Tech for Trust: Blockchain</h2>
+            <div class="content-area">
+                <div class="two-column">
+                    <div class="image-wrapper">
+                        <img src="./coffee_traceability.jpg" alt="Coffee beans blockchain traceability">
+                    </div>
+                    <div>
+                        <h3>Coffee Bean Traceability <a href="https://ieeexplore.ieee.org/abstract/document/9893095/"
+                                target="_blank"
+                                style="font-size: 16px; color: #3b82f6; text-decoration: none; margin-left: 10px;"><i
+                                    class="fa-solid fa-external-link"></i></a></h3>
+                        <p>งานวิจัยร่วมกับ <strong>NECTEC</strong>
+                        </p>
+                        <div class="bullet-list">
+                            <ul>
+                                <li>ใช้ <strong>Blockchain (Hyperledger Fabric)</strong> ตรวจสอบย้อนกลับเมล็ดกาแฟไทย
+                                </li>
+                                <li>สร้าง <strong>Smart Contracts</strong> เพื่อความโปร่งใสใน Supply Chain</li>
+                                <li>เป้าหมาย: เพิ่มมูลค่าให้เกษตรกรและสร้างความเชื่อมั่นให้ผู้บริโภค</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ref: gemini
+        </div>
+
+        <!-- Slide 12: Research Highlight (Blockchain Traceability Detail) -->
+        <div class="slide-container">
+            <h2 class="slide-title">Blockchain Traceability: Deep Dive</h2>
+            <div class="content-area">
+                <div class="tiled-content">
+                    <div class="tile timeline-item">
+                        <div class="icon"><i class="fa-solid fa-leaf"></i></div>
+                        <h3>Farm</h3>
+                        <p>เกษตรกร</p>
+                    </div>
+                    <div class="tile timeline-item">
+                        <div class="icon"><i class="fa-solid fa-fire"></i></div>
+                        <h3>Roastery</h3>
+                        <p>โรงคั่ว</p>
+                    </div>
+                    <div class="tile timeline-item">
+                        <div class="icon"><i class="fa-solid fa-shopping-bag"></i></div>
+                        <h3>Retail</h3>
+                        <p>ร้านค้า</p>
+                    </div>
+                    <div class="tile timeline-item">
+                        <div class="icon"><i class="fa-solid fa-mug-hot"></i></div>
+                        <h3>Consumer</h3>
+                        <p>ผู้บริโภค</p>
+                    </div>
+                </div>
+                <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px;">
+                    <div
+                        style="background: #ecfdf5; padding: 20px; border-radius: 12px; border-left: 4px solid #10b981;">
+                        <h3 style="color: #047857; margin-top: 0;">Hyperledger Fabric</h3>
+                        <p style="margin: 10px 0 0 0;">ใช้ Blockchain ระดับองค์กร มีความปลอดภัยสูง</p>
+                    </div>
+                    <div
+                        style="background: #dbeafe; padding: 20px; border-radius: 12px; border-left: 4px solid #3b82f6;">
+                        <h3 style="color: #1e40af; margin-top: 0;">Transparency</h3>
+                        <p style="margin: 10px 0 0 0;">สร้างความโปร่งใสในห่วงโซ่อุปทาน ตรวจสอบได้</p>
+                    </div>
+                    <div
+                        style="background: #f3e8ff; padding: 20px; border-radius: 12px; border-left: 4px solid #a855f7;">
+                        <h3 style="color: #6b21a8; margin-top: 0;">Value Added</h3>
+                        <p style="margin: 10px 0 0 0;">เพิ่มมูลค่าให้เกษตรกร สร้างความเชื่อมั่นให้ผู้บริโภค</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Research Highlight (Medical AI) -->
+        <div class="slide-container bleed-image-layout">
+            <div class="content-container">
+                <h2 class="slide-title">Medical AI Research</h2>
+                <div class="content-area">
+                    <h3>Normal Pressure Hydrocephalus Classification using Weakly-Supervised Local Feature Extraction
+                        <a href="https://www.sciencedirect.com/science/article/pii/S0010482525011023" target="_blank"
+                            style="font-size: 16px; color: #3b82f6; text-decoration: none; margin-left: 10px;"><i
+                                class="fa-solid fa-external-link"></i></a>
+                    </h3>
+                    <p><strong>Problem:</strong> โรคน้ำคั่งในโพรงสมอง (NPH) วินิจฉัยยากในผู้สูงอายุ</p>
+                    <p><strong>Solution:</strong> AI (Deep Learning) แบบ 'Weakly-Supervised' ช่วยหมออ่านฟิล์ม CT Scan
+                    </p>
+                    <p><strong>Achievement:</strong> ตีพิมพ์ใน Q1 Journal (Computers in Biology and Medicine)</p>
+                    <div style="margin-top: 30px;">
+                        <a href="./summary_nph.png" target="_blank"
+                            style="display: inline-block; padding: 12px 24px; background: #F26522; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s;">
+                            <i class="fa-solid fa-image" style="margin-right: 8px;"></i>View Overview
+                        </a>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <a href="./Infographic.png" target="_blank"
+                            style="display: inline-block; padding: 12px 24px; background: #F26522; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s;">
+                            <i class="fa-solid fa-image" style="margin-right: 8px;"></i>View Infographic
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <div class="image-container">
+                <img class="bleed-image-side" src="./ct-scan-nph.png" alt="Brain CT Scan Analysis">
+            </div>
+            ref: Supratak, Akara, et al. "Normal Pressure Hydrocephalus Classification using Weakly-Supervised Local
+            Feature Extraction." Computers in Biology and Medicine 196 (2025): 110751.
+        </div>
+
+        <div class="slide-container reality-box">
+            <h2 class="slide-title animate-fade-in"
+                style="font-size: 48px; color: #1e293b; text-align: center; margin-bottom: 50px; font-weight: 800;">
+                เบื้องหลังความสำเร็จ
+            </h2>
+
+            <div class="journey-list">
+                <div class="journey-item" style="animation-delay: 0.2s;">
+                    <i class="fa-solid fa-rotate-right" style="color: #F26522; margin-right: 15px;"></i>
+                    <span>กว่าจะเป็น 1 ผลงาน: <strong>"แก้แล้วแก้อีก"</strong>
+                        คือเรื่องปกติของการทำงานที่มีคุณภาพ</span>
+                </div>
+                <div class="journey-item" style="animation-delay: 0.4s;">
+                    <i class="fa-solid fa-comments-pie" style="color: #3b82f6; margin-right: 15px;"></i>
+                    <span>การทำงานข้ามสายงาน: ต้องปรับ <strong>"ภาษา"</strong>
+                        ให้เข้ากับเพื่อนร่วมงานที่คิดต่างจากเรา</span>
+                </div>
+                <div class="journey-item" style="animation-delay: 0.6s;">
+                    <i class="fa-solid fa-flask-vial" style="color: #10b981; margin-right: 15px;"></i>
+                    <span>การทดลองที่ล้มเหลว: คือ <strong>"ข้อมูลสำคัญ"</strong>
+                        ที่จะบอกว่าทางไหนคือทางที่ใช่</span>
+                </div>
+            </div>
+
+            <div class="illustration-mockup animate-fade-in"
+                style="padding: 20px; background: #fffcf9; border-radius: 20px;">
+                <div style="display: flex; justify-content: space-around; align-items: center;">
+                    <i class="fa-solid fa-calendar-check" style="font-size: 80px; color: #cbd5e1;"></i>
+                    <i class="fa-solid fa-mug-hot" style="font-size: 100px; color: #F26522;"></i>
+                    <div>
+                        <div
+                            style="border: 4px solid #ef4444; color: #ef4444; padding: 5px 15px; transform: rotate(-15deg); font-weight: 900; margin-bottom: 10px;">
+                            REJECTED</div>
+                        <div
+                            style="border: 4px solid #10b981; color: #10b981; padding: 5px 15px; transform: rotate(10deg); font-weight: 900;">
+                            ACCEPTED</div>
+                    </div>
+                </div>
+            </div>
+
+            <p style="font-size: 26px; color: #475569; max-width: 800px; line-height: 1.6; margin-top: 40px;">
+                "ความล้มเหลวในการทดลองเป็นเรื่องปกติ<br>
+                <strong style="color: #F26522;">สำคัญคือต้องสรุปผล ลุกขึ้นมาใหม่ และไปต่อ</strong>"
+            </p>
+
+        </div>
+
+        <div class="slide-container">
+            <h2 class="slide-title">The Power of Resilience</h2>
+            <div class="content-area">
+                <div class="two-column">
+                    <div style="text-align: center;">
+                        <div style="position: relative; display: inline-block;">
+                            <i class="fa-solid fa-bolt-lightning"
+                                style="font-size: 120px; color: #f59e0b; margin-bottom: 20px;"></i>
+                            <i class="fa-solid fa-heart-pulse"
+                                style="font-size: 50px; color: #ef4444; position: absolute; bottom: 20px; right: -10px;"></i>
+                        </div>
+                        <h3 style="font-size: 32px; color: #1e293b; margin-top: 20px;">ล้มได้... แต่ต้องลุกให้เร็ว</h3>
+                    </div>
+                    <div>
+                        <div class="bullet-list">
+                            <ul>
+                                <li><strong>Fail Fast, Learn Faster:</strong> ในโลกงานวิจัย ความผิดพลาดไม่ใช่จุดจบ
+                                    แต่คือ
+                                    "ข้อมูล" ที่บอกว่าวิธีนี้ใช้ไม่ได้ผล</li>
+                                <li><strong>Emotional Regulation:</strong> การจัดการความรู้สึกเมื่อถูกปฏิเสธ (Rejected)
+                                    เพื่อรักษาพลังใจในการทำงานต่อ</li>
+                                <li><strong>Adaptability:</strong>
+                                    ความสามารถในการปรับเปลี่ยนกลยุทธ์เมื่อเผชิญกับเงื่อนไขที่ไม่คาดคิด</li>
+                                <li><strong>Growth from Stress:</strong>
+                                    เปลี่ยนแรงกดดันให้เป็นแรงผลักดันในการพัฒนาผลงานชิ้นต่อไป</li>
+                            </ul>
+                        </div>
+                        <div
+                            style="background: #eff6ff; padding: 20px; border-radius: 12px; border-left: 5px solid #3b82f6; margin-top: 25px;">
+                            <p style="margin: 0; font-weight: 500; color: #1e40af;">
+                                "Resilience ไม่ได้แปลว่าไม่แพ้ แต่แปลว่าคุณมีความสามารถในการกลับมาแข็งแกร่งกว่าเดิม"
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Essential Skills -->
+        <div class="slide-container" style="padding: 60px 40px; background: #f8fafc; font-family: 'Inter', sans-serif;">
+            <h2 class="slide-title animate-fade-in"
+                style="font-size: 48px; color: #1e293b; text-align: center; margin-bottom: 50px; font-weight: 800;">
+                Essential Skills for the Future
+            </h2>
+
+            <div class="content-area">
+                <div
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1100px; margin: 0 auto;">
+
+                    <div class="skill-card animate-fade-in delay-1" style="border-top: 6px solid #F26522;">
+                        <h3
+                            style="font-size: 28px; color: #F26522; margin-bottom: 25px; display: flex; align-items: center;">
+                            <i class="fa-solid fa-screwdriver-wrench" style="margin-right: 15px;"></i> Core Foundations
+                        </h3>
+                        <div class="bullet-list">
+                            <ul>
+                                <li>
+                                    <i class="fa-solid fa-brain" style="color: #64748b;"></i>
+                                    <span><strong>Logic & Data:</strong>
+                                        ความสามารถในการอ่านข้อมูลและใช้เหตุผลเพื่อตัดสินใจ
+                                        (Data Literacy)</span>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-microchip" style="color: #64748b;"></i>
+                                    <span><strong>Tech Literacy:</strong> เข้าใจกลไกของเทคโนโลยี ไม่ใช่แค่ผู้ใช้งาน
+                                        แต่เป็นผู้ควบคุม</span>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-language" style="color: #db2777;"></i>
+                                    <span><strong>Global Communication:</strong> <span
+                                            style="color: #db2777; font-weight: bold;">ภาษาคือประตูสู่ความรู้ระดับโลก</span>
+                                        เพื่อเข้าถึงแหล่งข้อมูลที่ใหม่ที่สุด</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="skill-card animate-fade-in delay-2" style="border-top: 6px solid #3b82f6;">
+                        <h3
+                            style="font-size: 28px; color: #3b82f6; margin-bottom: 25px; display: flex; align-items: center;">
+                            <i class="fa-solid fa-seedling" style="margin-right: 15px;"></i> Growth Mindset
+                        </h3>
+                        <div class="bullet-list">
+                            <ul>
+                                <li>
+                                    <i class="fa-solid fa-shield-heart" style="color: #64748b;"></i>
+                                    <span><strong>Resilience:</strong> "ความล้มเหลวคือข้อมูล"
+                                        เรียนรู้จากข้อผิดพลาดแล้วปรับปรุงทันที</span>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-lightbulb" style="color: #64748b;"></i>
+                                    <span><strong>Critical Thinking:</strong> อย่าเชื่อในสิ่งที่เห็นทันที
+                                        แต่จงสงสัยและพิสูจน์หาความจริง</span>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-infinity" style="color: #64748b;"></i>
+                                    <span><strong>Agile Learning:</strong> เครื่องมือเปลี่ยนทุกปี
+                                        แต่วิธีคิดและการเรียนรู้จะอยู่ตลอดไป</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="animate-fade-in delay-3"
+                style="text-align: center; margin-top: 50px; color: #94a3b8; font-style: italic;">
+                "เพราะในโลกอนาคต คนที่หยุดเรียนรู้ คือคนที่ถอยหลัง"
+            </div>
+        </div>
+
+        <!-- Slide 13: Call to Action & Message -->
+        <div class="slide-container" background: #ffffff; padding: 60px 20px; border-radius: 24px;">
+            <div class="content-area" style="text-align: center; max-width: 1000px; margin: 0 auto;">
+
+                <div style="margin-bottom: 30px;">
+                    <i class="fa-solid fa-lightbulb" style="font-size: 70px; color: #F26522;"></i>
+                </div>
+
+                <h2 style="font-size: 54px; color: #1e293b; margin-bottom: 20px; font-weight: 800;">Your Growth Starts
+                    Now</h2>
+
+                <p style="font-size: 24px; color: #64748b; max-width: 850px; line-height: 1.8; margin: 0 auto 50px;">
+                    ไม่ว่าคุณจะอยู่ในสายงานไหน คุณก็สามารถก้าวไปสู่จุดสูงสุดได้<br>
+                    ด้วย <strong style="color: #F26522;">ความสงสัยใคร่รู้ การคิดอย่างเป็นระบบ
+                        และความจริงจังต่องาน</strong>
+                </p>
+
+                <div
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 720px; margin: 0 auto;">
+
+                    <div
+                        style="background: #fff7ed; padding: 40px 30px; border-radius: 20px; border-left: 6px solid #F26522; transition: transform 0.3s ease;">
+                        <i class="fa-solid fa-magnifying-glass-chart"
+                            style="font-size: 40px; color: #F26522; margin-bottom: 15px;"></i>
+                        <h3 style="color: #1e293b; margin: 15px 0; font-size: 28px;">Investigate Deep</h3>
+                        <p style="color: #64748b; margin: 0; font-size: 18px; line-height: 1.6;">
+                            ตั้งคำถามถึง "ราก" ของปัญหา<br>เพื่อค้นหาคำตอบที่ยั่งยืน
+                        </p>
+                    </div>
+
+                    <div
+                        style="background: #dbeafe; padding: 40px 30px; border-radius: 20px; border-left: 6px solid #3b82f6; transition: transform 0.3s ease;">
+                        <i class="fa-solid fa-gears" style="font-size: 40px; color: #3b82f6; margin-bottom: 15px;"></i>
+                        <h3 style="color: #1e293b; margin: 15px 0; font-size: 28px;">Execute Smart</h3>
+                        <p style="color: #64748b; margin: 0; font-size: 18px; line-height: 1.6;">
+                            วางกลยุทธ์ด้วย Logic ที่ชัดเจน<br>และวัดผลได้จริง
+                        </p>
+                    </div>
+
+                </div>
+
+                <p style="margin-top: 60px; font-size: 22px; color: #94a3b8; font-style: italic; font-weight: 400;">
+                    "จำไว้เสมอ: ทุกคนเริ่มจากจุดศูนย์ แต่ผู้ที่ยอมเรียนรู้อย่างจริงจัง คือผู้ที่จะสำเร็จ"
+                </p>
+
+            </div>
+        </div>
+        <!-- Slide 14: Closing -->
+
+        <div class="slide-container">
+            <div class="content-area" style="text-align: center; align-items: center; justify-content: center;">
+                <div style="margin-bottom: 20px;">
+                    <i class="fa-solid fa-comments" style="font-size: 70px; color: #26a69a;"></i>
+                </div>
+                <h2 style="font-size: 54px; color: #1e293b; margin-bottom: 18px;">ถาม-ตอบ & ติดต่อพี่ (Q&amp;A)</h2>
+                <p style="font-size: 22px; color: #64748b; max-width: 760px; line-height: 1.6; margin: 0 auto 40px;">
+                    น้องๆ คนไหนมีคำถามเรื่องการเรียนต่อ การเขียนโค้ด ทักมาคุยกับพี่ได้เลย
+                </p>
+                <div
+                    style="width: 70%; max-width: 640px; background: #f8fafc; border-radius: 14px; padding: 22px 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 6px solid #F26522; display: flex; align-items: center; justify-content: center; gap: 20px;">
+                    <div
+                        style="width: 48px; height: 48px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px #e2e8f0;">
+                        <i class="fa-solid fa-envelope" style="font-size: 24px; color: #F26522;"></i>
+                    </div>
+                    <span style="font-size: 24px; color: #14b8a6; font-weight: 600;">siripra.k@ubu.ac.th</span>
+                </div>
+                <p style="margin-top: 30px; font-size: 18px; color: #94a3b8;">
+                    "ยินดีที่ได้มาแชร์ประสบการณ์กับน้องๆ ทุกคนค่ะ"
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. NAVIGATION LOGIC
+        let currentSlide = parseInt(localStorage.getItem('currentSlide')) || 0;
+        const slides = document.querySelectorAll('.slide-container');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progressBar');
+        const slideCounter = document.getElementById('slideCounter');
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+            localStorage.setItem('currentSlide', currentSlide);
+            progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+            slideCounter.innerText = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; updateUI(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateUI(); } }
+
+        // 2. SIDEBAR SYSTEM
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+
+        function openSidebar(img, title, desc) {
+            document.getElementById('sidebarImage').src = img;
+            document.getElementById('sidebarTitle').innerText = title;
+            document.getElementById('sidebarDesc').innerText = desc;
+            sidebar.classList.add('active');
+            backdrop.style.display = 'block';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            backdrop.style.display = 'none';
+        }
+
+        // 3. KEYBOARD CONTROL
+        document.addEventListener('keydown', (e) => {
+            if (sidebar.classList.contains('active')) {
+                if (e.key === 'Escape') closeSidebar();
+                return;
+            }
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Initialize
+        updateUI();
+    </script>
+
+</body>
+
+</html>
