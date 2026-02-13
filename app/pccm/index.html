@@ -299,6 +299,109 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
         }
 
+        CSS
+        /* Modal Styles */
+        CSS
+
+        /* ปรับให้ Modal อยู่ชั้นบนสุดของทุกอย่าง */
+        /* Modal Overlay - แยกออกมาเป็น Layer บนสุดของทั้งไฟล์ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            /* ใช้ JavaScript สั่งให้เป็น flex */
+            justify-content: center;
+            align-items: center;
+            z-index: 99999 !important;
+            /* บังคับให้อยู่บนสุดเหนือทุกอย่าง */
+            cursor: zoom-out;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-img {
+            max-width: 90%;
+            max-height: 85%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-img {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* ปรับ Nav และ Progress ให้อยู่ระหว่าง Slide กับ Modal */
+        .nav-button,
+        .slide-counter,
+        .progress-bar {
+            z-index: 1000;
+        }
+
+        /* Slide ที่แสดงผลอยู่ให้มี z-index พื้นฐาน */
+        .slide-container.active {
+            display: flex;
+            opacity: 1;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        .nav-button,
+        .slide-counter,
+        .progress-bar {
+            z-index: 100;
+            /* ให้ปุ่มนำทางอยู่ต่ำกว่า Modal (9999) */
+        }
+
+        /* ปรับแต่ง Gallery เล็กน้อย */
+        .memory-gallery {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(2, 220px);
+            gap: 15px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .memory-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: zoom-in;
+        }
+
+        .memory-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .memory-item:hover {
+            transform: scale(1.03);
+            z-index: 20;
+        }
+
+        .item-wide {
+            grid-column: span 2;
+        }
+
         .timeline-item {
             position: relative;
             z-index: 1;
@@ -473,17 +576,139 @@
             color: #64748b;
             z-index: 100;
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .behind-the-scenes-container {
+            animation: fadeIn 1s ease-in;
+            padding: 60px;
+            background: #fdfdfd;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        .reality-box {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .illustration-mockup {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        /* ตกแต่ง Bullet points ให้ดู modern */
+        .journey-list {
+            text-align: left;
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 30px;
+        }
+
+        .journey-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #334155;
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        .status-stamp {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+
+        .memory-gallery {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(2, 220px);
+            gap: 15px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .memory-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer;
+        }
+
+        .memory-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .memory-item:hover {
+            transform: scale(1.03);
+            z-index: 20;
+            box-shadow: 0 15px 30px rgba(242, 101, 34, 0.2);
+        }
+
+        .memory-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* จัดสัดส่วนให้ดูมีจังหวะ (Mosaic Effect) */
+        .item-wide {
+            grid-column: span 2;
+        }
+
+        .item-tall {
+            grid-row: span 2;
+        }
     </style>
 </head>
 
 <body>
-
     <div class="progress-bar" id="progressBar"></div>
     <button class="nav-button prev-btn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
     <button class="nav-button next-btn" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
+    <div class="modal-overlay" id="imageModal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <img class="modal-img" id="fullImage" src="" alt="Fullscreen image">
+    </div>
     <div class="slide-counter" id="slideCounter">1 / 15</div>
 
     <div class="slide-deck">
+
         <!-- Slide 1: Cover Slide -->
         <div class="slide-container active">
             <div class="content-area" style="text-align: center; align-items: center;">
@@ -719,6 +944,43 @@
             </div>
         </div>
 
+        <!-- Slide 7: Memory Journey Gallery -->
+
+        <div class="slide-container">
+            <h2 class="slide-title">My Journey Memories</h2>
+            <div class="content-area">
+                <div class="memory-gallery">
+                    <div class="memory-item item-wide" onclick="openModal('../../public/memory/1.jpg')">
+                        <img src="../../public/memory/1.jpg" alt="Memory 1">
+                    </div>
+                    <div class="memory-item" onclick="openModal('../../public/memory/2.jpg')">
+                        <img src="../../public/memory/2.jpg" alt="Memory 2">
+                    </div>
+                    <div class="memory-item" onclick="openModal('../../public/memory/3.jpg')">
+                        <img src="../../public/memory/3.jpg" alt="Memory 3">
+                    </div>
+                    <div class="memory-item item-wide" onclick="openModal('../../public/memory/4.jpg')">
+                        <img src="../../public/memory/4.jpg" alt="Memory 4">
+                    </div>
+                    <div class="memory-item" onclick="openModal('../../public/memory/5.jpg')">
+                        <img src="../../public/memory/5.jpg" alt="Memory 5">
+                    </div>
+                    <div class="memory-item" onclick="openModal('../../public/memory/7.jpg')">
+                        <img src="../../public/memory/7.jpg" alt="Memory 7">
+                    </div>
+                    <div class="memory-item" onclick="openModal('../../public/memory/8.jpg')">
+                        <img src="../../public/memory/8.jpg" alt="Memory 8">
+                    </div>
+                    <div class="memory-item" onclick="openModal('../../public/memory/9.jpg')">
+                        <img src="../../public/memory/9.jpg" alt="Memory 9">
+                    </div>
+                    <div class="memory-item" onclick="openModal('../../public/memory/10.jpg')">
+                        <img src="../../public/memory/10.jpg" alt="Memory 10">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Slide 7: Master's Degree (NEW SLIDE) -->
         <div class="slide-container bleed-image-layout">
             <div class="content-container">
@@ -893,11 +1155,19 @@
                     </p>
                     <p><strong>Achievement:</strong> ตีพิมพ์ใน Q1 Journal (Computers in Biology and Medicine)</p>
                     <div style="margin-top: 30px;">
+                        <a href="../../public/summary_nph.png" target="_blank"
+                            style="display: inline-block; padding: 12px 24px; background: #F26522; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s;">
+                            <i class="fa-solid fa-image" style="margin-right: 8px;"></i>View Overview
+                        </a>
+                    </div>
+
+                    <div style="margin-top: 30px;">
                         <a href="../../public/Infographic.png" target="_blank"
                             style="display: inline-block; padding: 12px 24px; background: #F26522; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s;">
                             <i class="fa-solid fa-image" style="margin-right: 8px;"></i>View Infographic
                         </a>
                     </div>
+
                 </div>
             </div>
             <div class="image-container">
@@ -907,57 +1177,281 @@
             Feature Extraction." Computers in Biology and Medicine 196 (2025): 110751.
         </div>
 
+        <div class="slide-container reality-box">
+            <h2 class="slide-title animate-fade-in"
+                style="font-size: 48px; color: #1e293b; text-align: center; margin-bottom: 50px; font-weight: 800;">
+                เบื้องหลังความสำเร็จ
+            </h2>
 
+            <div class="journey-list">
+                <div class="journey-item" style="animation-delay: 0.2s;">
+                    <i class="fa-solid fa-rotate-right" style="color: #F26522; margin-right: 15px;"></i>
+                    <span>กว่าจะเป็น 1 ผลงาน: <strong>"แก้แล้วแก้อีก"</strong>
+                        คือเรื่องปกติของการทำงานที่มีคุณภาพ</span>
+                </div>
+                <div class="journey-item" style="animation-delay: 0.4s;">
+                    <i class="fa-solid fa-comments-pie" style="color: #3b82f6; margin-right: 15px;"></i>
+                    <span>การทำงานข้ามสายงาน: ต้องปรับ <strong>"ภาษา"</strong>
+                        ให้เข้ากับเพื่อนร่วมงานที่คิดต่างจากเรา</span>
+                </div>
+                <div class="journey-item" style="animation-delay: 0.6s;">
+                    <i class="fa-solid fa-flask-vial" style="color: #10b981; margin-right: 15px;"></i>
+                    <span>การทดลองที่ล้มเหลว: คือ <strong>"ข้อมูลสำคัญ"</strong>
+                        ที่จะบอกว่าทางไหนคือทางที่ใช่</span>
+                </div>
+            </div>
 
-        <!-- Slide 13: Essential Skills -->
+            <div class="illustration-mockup animate-fade-in"
+                style="padding: 20px; background: #fffcf9; border-radius: 20px;">
+                <div style="display: flex; justify-content: space-around; align-items: center;">
+                    <i class="fa-solid fa-calendar-check" style="font-size: 80px; color: #cbd5e1;"></i>
+                    <i class="fa-solid fa-mug-hot" style="font-size: 100px; color: #F26522;"></i>
+                    <div>
+                        <div
+                            style="border: 4px solid #ef4444; color: #ef4444; padding: 5px 15px; transform: rotate(-15deg); font-weight: 900; margin-bottom: 10px;">
+                            REJECTED</div>
+                        <div
+                            style="border: 4px solid #10b981; color: #10b981; padding: 5px 15px; transform: rotate(10deg); font-weight: 900;">
+                            ACCEPTED</div>
+                    </div>
+                </div>
+            </div>
+
+            <p style="font-size: 26px; color: #475569; max-width: 800px; line-height: 1.6; margin-top: 40px;">
+                "ความล้มเหลวในการทดลองเป็นเรื่องปกติ<br>
+                <strong style="color: #F26522;">สำคัญคือต้องสรุปผล ลุกขึ้นมาใหม่ และไปต่อ</strong>"
+            </p>
+
+        </div>
+
         <div class="slide-container">
-            <h2 class="slide-title">Essential Skills for Future</h2>
+            <h2 class="slide-title">The Power of Resilience</h2>
             <div class="content-area">
                 <div class="two-column">
-                    <div>
-                        <h3>Hard Skills</h3>
-                        <div class="bullet-list">
-                            <ul>
-                                <li><strong>Coding:</strong> Python is King!</li>
-                                <li><strong>Mathematics:</strong> เบื้องหลัง AI คือ Math</li>
-                                <li><strong>English:</strong> <span style="color: #db2777;">อาวุธลับสำคัญที่สุด</span>
-                                    (ต้องอ่าน Paper ได้)</li>
-                            </ul>
+                    <div style="text-align: center;">
+                        <div style="position: relative; display: inline-block;">
+                            <i class="fa-solid fa-bolt-lightning"
+                                style="font-size: 120px; color: #f59e0b; margin-bottom: 20px;"></i>
+                            <i class="fa-solid fa-heart-pulse"
+                                style="font-size: 50px; color: #ef4444; position: absolute; bottom: 20px; right: -10px;"></i>
                         </div>
+                        <h3 style="font-size: 32px; color: #1e293b; margin-top: 20px;">ล้มได้... แต่ต้องลุกให้เร็ว</h3>
                     </div>
                     <div>
-                        <h3>Soft Skills (Growth Mindset)</h3>
                         <div class="bullet-list">
                             <ul>
-                                <li><strong>Resilience:</strong> อย่ากลัว Bug มันคือครูที่ดีที่สุด</li>
-                                <li><strong>Critical Thinking:</strong> ตั้งคำถามว่า "ทำไม" เสมอ</li>
-                                <li><strong>Life Long Learning:</strong> เครื่องมือเปลี่ยนทุกปี แต่วิธีคิดอยู่ตลอดไป
-                                </li>
+                                <li><strong>Fail Fast, Learn Faster:</strong> ในโลกงานวิจัย ความผิดพลาดไม่ใช่จุดจบ
+                                    แต่คือ
+                                    "ข้อมูล" ที่บอกว่าวิธีนี้ใช้ไม่ได้ผล</li>
+                                <li><strong>Emotional Regulation:</strong> การจัดการความรู้สึกเมื่อถูกปฏิเสธ (Rejected)
+                                    เพื่อรักษาพลังใจในการทำงานต่อ</li>
+                                <li><strong>Adaptability:</strong>
+                                    ความสามารถในการปรับเปลี่ยนกลยุทธ์เมื่อเผชิญกับเงื่อนไขที่ไม่คาดคิด</li>
+                                <li><strong>Growth from Stress:</strong>
+                                    เปลี่ยนแรงกดดันให้เป็นแรงผลักดันในการพัฒนาผลงานชิ้นต่อไป</li>
                             </ul>
+                        </div>
+                        <div
+                            style="background: #eff6ff; padding: 20px; border-radius: 12px; border-left: 5px solid #3b82f6; margin-top: 25px;">
+                            <p style="margin: 0; font-weight: 500; color: #1e40af;">
+                                "Resilience ไม่ได้แปลว่าไม่แพ้ แต่แปลว่าคุณมีความสามารถในการกลับมาแข็งแกร่งกว่าเดิม"
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 14: Closing -->
-        <div class="slide-container">
-            <div class="content-area" style="text-align: center;">
-                <h2 style="font-size: 56px; color: #1e293b; margin-bottom: 20px;">Join the Future at UBU Science</h2>
-                <p style="font-size: 24px; color: #64748b;">หลักสูตร Data Science and Software Innovation (DSSI)</p>
+        <!-- Slide 13: Essential Skills -->
+        <div class="slide-container" style="padding: 60px 40px; background: #f8fafc; font-family: 'Inter', sans-serif;">
+            <h2 class="slide-title animate-fade-in"
+                style="font-size: 48px; color: #1e293b; text-align: center; margin-bottom: 50px; font-weight: 800;">
+                Essential Skills for the Future
+            </h2>
+
+            <div class="content-area">
                 <div
-                    style="margin: 40px auto; width: 150px; height: 150px; background: #e2e8f0; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                    <i class="fa-solid fa-qrcode" style="font-size: 80px; color: #334155;"></i>
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1100px; margin: 0 auto;">
+
+                    <div class="skill-card animate-fade-in delay-1" style="border-top: 6px solid #F26522;">
+                        <h3
+                            style="font-size: 28px; color: #F26522; margin-bottom: 25px; display: flex; align-items: center;">
+                            <i class="fa-solid fa-screwdriver-wrench" style="margin-right: 15px;"></i> Core Foundations
+                        </h3>
+                        <div class="bullet-list">
+                            <ul>
+                                <li>
+                                    <i class="fa-solid fa-brain" style="color: #64748b;"></i>
+                                    <span><strong>Logic & Data:</strong>
+                                        ความสามารถในการอ่านข้อมูลและใช้เหตุผลเพื่อตัดสินใจ
+                                        (Data Literacy)</span>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-microchip" style="color: #64748b;"></i>
+                                    <span><strong>Tech Literacy:</strong> เข้าใจกลไกของเทคโนโลยี ไม่ใช่แค่ผู้ใช้งาน
+                                        แต่เป็นผู้ควบคุม</span>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-language" style="color: #db2777;"></i>
+                                    <span><strong>Global Communication:</strong> <span
+                                            style="color: #db2777; font-weight: bold;">ภาษาคือประตูสู่ความรู้ระดับโลก</span>
+                                        เพื่อเข้าถึงแหล่งข้อมูลที่ใหม่ที่สุด</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="skill-card animate-fade-in delay-2" style="border-top: 6px solid #3b82f6;">
+                        <h3
+                            style="font-size: 28px; color: #3b82f6; margin-bottom: 25px; display: flex; align-items: center;">
+                            <i class="fa-solid fa-seedling" style="margin-right: 15px;"></i> Growth Mindset
+                        </h3>
+                        <div class="bullet-list">
+                            <ul>
+                                <li>
+                                    <i class="fa-solid fa-shield-heart" style="color: #64748b;"></i>
+                                    <span><strong>Resilience:</strong> "ความล้มเหลวคือข้อมูล"
+                                        เรียนรู้จากข้อผิดพลาดแล้วปรับปรุงทันที</span>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-lightbulb" style="color: #64748b;"></i>
+                                    <span><strong>Critical Thinking:</strong> อย่าเชื่อในสิ่งที่เห็นทันที
+                                        แต่จงสงสัยและพิสูจน์หาความจริง</span>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-infinity" style="color: #64748b;"></i>
+                                    <span><strong>Agile Learning:</strong> เครื่องมือเปลี่ยนทุกปี
+                                        แต่วิธีคิดและการเรียนรู้จะอยู่ตลอดไป</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
-                <p style="font-size: 20px;"><strong>Email:</strong> siripra.k@ubu.ac.th</p>
-                <p style="font-size: 24px; color: #F26522; font-weight: 600; margin-top: 30px;">"The best way to predict
-                    the future is to create it."</p>
+            </div>
+
+            <div class="animate-fade-in delay-3"
+                style="text-align: center; margin-top: 50px; color: #94a3b8; font-style: italic;">
+                "เพราะในโลกอนาคต คนที่หยุดเรียนรู้ คือคนที่ถอยหลัง"
+            </div>
+        </div>
+
+        <!-- Slide 13: Call to Action & Message -->
+        <div class="slide-container" background: #ffffff; padding: 60px 20px; border-radius: 24px;">
+            <div class="content-area" style="text-align: center; max-width: 1000px; margin: 0 auto;">
+
+                <div style="margin-bottom: 30px;">
+                    <i class="fa-solid fa-lightbulb" style="font-size: 70px; color: #F26522;"></i>
+                </div>
+
+                <h2 style="font-size: 54px; color: #1e293b; margin-bottom: 20px; font-weight: 800;">Your Growth Starts
+                    Now</h2>
+
+                <p style="font-size: 24px; color: #64748b; max-width: 850px; line-height: 1.8; margin: 0 auto 50px;">
+                    ไม่ว่าคุณจะอยู่ในสายงานไหน คุณก็สามารถก้าวไปสู่จุดสูงสุดได้<br>
+                    ด้วย <strong style="color: #F26522;">ความสงสัยใคร่รู้ การคิดอย่างเป็นระบบ
+                        และความจริงจังต่องาน</strong>
+                </p>
+
+                <div
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 720px; margin: 0 auto;">
+
+                    <div
+                        style="background: #fff7ed; padding: 40px 30px; border-radius: 20px; border-left: 6px solid #F26522; transition: transform 0.3s ease;">
+                        <i class="fa-solid fa-magnifying-glass-chart"
+                            style="font-size: 40px; color: #F26522; margin-bottom: 15px;"></i>
+                        <h3 style="color: #1e293b; margin: 15px 0; font-size: 28px;">Investigate Deep</h3>
+                        <p style="color: #64748b; margin: 0; font-size: 18px; line-height: 1.6;">
+                            ตั้งคำถามถึง "ราก" ของปัญหา<br>เพื่อค้นหาคำตอบที่ยั่งยืน
+                        </p>
+                    </div>
+
+                    <div
+                        style="background: #dbeafe; padding: 40px 30px; border-radius: 20px; border-left: 6px solid #3b82f6; transition: transform 0.3s ease;">
+                        <i class="fa-solid fa-gears" style="font-size: 40px; color: #3b82f6; margin-bottom: 15px;"></i>
+                        <h3 style="color: #1e293b; margin: 15px 0; font-size: 28px;">Execute Smart</h3>
+                        <p style="color: #64748b; margin: 0; font-size: 18px; line-height: 1.6;">
+                            วางกลยุทธ์ด้วย Logic ที่ชัดเจน<br>และวัดผลได้จริง
+                        </p>
+                    </div>
+
+                </div>
+
+                <p style="margin-top: 60px; font-size: 22px; color: #94a3b8; font-style: italic; font-weight: 400;">
+                    "จำไว้เสมอ: ทุกคนเริ่มจากจุดศูนย์ แต่ผู้ที่ยอมเรียนรู้อย่างจริงจัง คือผู้ที่จะสำเร็จ"
+                </p>
+
+            </div>
+        </div>
+        <!-- Slide 14: Closing -->
+
+        <div class="slide-container">
+            <div class="content-area" style="text-align: center; align-items: center; justify-content: center;">
+                <div style="margin-bottom: 20px;">
+                    <i class="fa-solid fa-comments" style="font-size: 70px; color: #26a69a;"></i>
+                </div>
+                <h2 style="font-size: 54px; color: #1e293b; margin-bottom: 18px;">ถาม-ตอบ & ติดต่อพี่ (Q&amp;A)</h2>
+                <p style="font-size: 22px; color: #64748b; max-width: 760px; line-height: 1.6; margin: 0 auto 40px;">
+                    น้องๆ คนไหนมีคำถามเรื่องการเรียนต่อ การเขียนโค้ด ทักมาคุยกับพี่ได้เลย
+                </p>
+                <div
+                    style="width: 70%; max-width: 640px; background: #f8fafc; border-radius: 14px; padding: 22px 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 6px solid #F26522; display: flex; align-items: center; justify-content: center; gap: 20px;">
+                    <div
+                        style="width: 48px; height: 48px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px #e2e8f0;">
+                        <i class="fa-solid fa-envelope" style="font-size: 24px; color: #F26522;"></i>
+                    </div>
+                    <span style="font-size: 24px; color: #14b8a6; font-weight: 600;">siripra.k@ubu.ac.th</span>
+                </div>
+                <p style="margin-top: 30px; font-size: 18px; color: #94a3b8;">
+                    "ยินดีที่ได้มาแชร์ประสบการณ์กับน้องๆ ทุกคนค่ะ"
+                </p>
             </div>
         </div>
     </div>
 
     <script>
-        let currentSlide = 0;
+        const modal = document.getElementById('imageModal');
+        const fullImg = document.getElementById('fullImage');
+
+        // ฟังก์ชันเปิด Modal
+        function openModal(imgSrc) {
+            fullImg.src = imgSrc;
+            modal.style.display = 'flex'; // สั่งให้แสดงผลก่อน
+            setTimeout(() => {
+                modal.classList.add('active'); // แล้วค่อยทำ Animation ขยาย
+            }, 10);
+        }
+
+        // ฟังก์ชันปิด Modal
+        function closeModal() {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none'; // ซ่อนหลังจาก Animation จบ
+                fullImg.src = "";
+            }, 300);
+        }
+
+        // ฟังก์ชันรวมสำหรับ Keyboard (ป้องกันการเลื่อนสไลด์ขณะเปิดรูป)
+        function handleGlobalKeydown(e) {
+            // ถ้าเปิดรูปอยู่
+            if (modal.style.display === 'flex') {
+                if (e.key === 'Escape') closeModal();
+                return; // ไม่ให้ทำงานส่วนเลื่อนสไลด์ข้างล่าง
+            }
+
+            // ส่วนเลื่อนสไลด์ปกติ
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        }
+
+        // ผูก Event ตัวเดียวที่ครอบคลุมทุกอย่าง
+        document.addEventListener('keydown', handleGlobalKeydown);
+
+        // --- ส่วนจัดการ Slide (ของเดิมที่คุณมี) ---
+        let currentSlide = parseInt(localStorage.getItem('currentSlide')) || 0;
         const slides = document.querySelectorAll('.slide-container');
         const totalSlides = slides.length;
         const progressBar = document.getElementById('progressBar');
@@ -965,45 +1459,16 @@
 
         function updateUI() {
             slides.forEach((slide, index) => {
-                if (index === currentSlide) {
-                    slide.classList.add('active');
-                } else {
-                    slide.classList.remove('active');
-                }
+                slide.classList.toggle('active', index === currentSlide);
             });
-
-            // Update Progress Bar
-            const progress = ((currentSlide + 1) / totalSlides) * 100;
-            progressBar.style.width = `${progress}%`;
-
-            // Update Counter
+            localStorage.setItem('currentSlide', currentSlide);
+            progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
             slideCounter.innerText = `${currentSlide + 1} / ${totalSlides}`;
         }
 
-        function nextSlide() {
-            if (currentSlide < totalSlides - 1) {
-                currentSlide++;
-                updateUI();
-            }
-        }
+        function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; updateUI(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateUI(); } }
 
-        function prevSlide() {
-            if (currentSlide > 0) {
-                currentSlide--;
-                updateUI();
-            }
-        }
-
-        // Keyboard Navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === ' ') {
-                nextSlide();
-            } else if (e.key === 'ArrowLeft') {
-                prevSlide();
-            }
-        });
-
-        // Initialize
         updateUI();
     </script>
 
